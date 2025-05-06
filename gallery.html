@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HEYHTML Photobox</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+      background-image: url(6.gif);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0;
+      padding: 0;
+      font-family: 'Press Start 2P', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 340px;
+      background: #0d1117;
+      border: 6px solid #ffd700;
+      border-radius: 20px;
+      padding: 10px;
+      box-shadow: 0 0 15px #000;
+      overflow-y: auto;
+      max-height: 95vh;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 18px;
+      color: #00ff00;
+      margin-bottom: 10px;
+      text-shadow: 0 0 5px #00ff00;
+    }
+
+    .top-bar {
+      background: #2d2f33;
+      padding: 10px;
+      border-radius: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #fdd835;
+      font-size: 10px;
+    }
+
+    .light {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .red { background: red; }
+    .green { background: green; }
+
+    .slot {
+      background: #444;
+      height: 20px;
+      margin: 10px 0;
+      border-radius: 5px;
+      position: relative;
+    }
+
+    .slot::before {
+      content: "";
+      position: absolute;
+      top: 5px;
+      left: 20px;
+      right: 20px;
+      height: 4px;
+      background: #000;
+      border-radius: 2px;
+    }
+
+    .screen {
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 10px;
+      color: #f1f1f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #photo-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .photo-frame {
+      position: relative;
+      width: 150px;
+      height: 200px;
+      border: 5px solid white;
+      overflow: hidden;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.5s ease;
+    }
+
+    .red-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 10px;
+      width: 0%;
+      background: red;
+      animation: lineAnim 1.5s forwards;
+    }
+
+    @keyframes lineAnim {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+
+    .status {
+      color: #ffeb3b;
+      font-size: 10px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      background: #c62828;
+      color: white;
+      font-size: 10px;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      box-shadow: inset -2px -2px 0px #891c1c;
+      cursor: pointer;
+      letter-spacing: 1px;
+      margin-top: 10px;
+    }
+
+    .bottom-bar {
+      background: #2d2f33;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .bottom-btn {
+      width: 50px;
+      height: 20px;
+      background: #1e1e1e;
+      border-radius: 10px;
+    }
+
+    .video-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      text-align: center;
+      margin: 20px auto;
+      width: 90%;
+      max-width: 300px;
+      font-family: 'Courier New', monospace;
+    }
+
+    .video-thumbnail {
+      position: relative;
+      background: #111;
+      border: 4px solid #000;
+    }
+
+    .video-thumbnail video {
+      display: block;
+      width: 100%;
+      border-radius: 5px;
+    }
+
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(17, 17, 17, 0.8);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      color: white;
+      font-size: 14px;
+    }
+
+    .play-button {
+      background: red;
+      color: white;
+      font-size: 36px;
+      padding: 10px 20px;
+      border-radius: 50%;
+      margin-bottom: 10px;
+    }
+
+    .video-title {
+      margin-top: 5px;
+      font-weight: bold;
+      color: #FFD700;
+      font-size: 16px;
+      text-transform: uppercase;
+      text-shadow: 1px 1px black;
+    }
+
+    .video-date {
+      background: gold;
+      padding: 3px 8px;
+      border-radius: 5px;
+      display: inline-block;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    .action-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 15px;
+      padding: 0 10px;
+    }
+    
+    .btn.green {
+      background-color: #2ecc71;
+      box-shadow: inset -2px -2px 0px #1e8449;
+    }
+    
+    .btn.red {
+      background-color: #e74c3c;
+      box-shadow: inset -2px -2px 0px #922b21;
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">Gallery</div>
+
+    <div class="top-bar">
+      <div class="light red"></div>
+      PHOTOBOX
+      <div class="light green"></div>
+    </div>
+
+    <div class="slot"></div>
+
+    <div class="screen">
+      <div id="photo-list" style="display: none;"></div>
+      <p class="status" id="status">Photobox siap digunakan</p>
+      <button class="btn" onclick="mulaiCetak()">MULAI CETAK</button>
+    </div>
+
+    <div id="video-section" style="display: none;">
+      <div class="video-card">
+        <div class="video-thumbnail">
+<video id="videoPreview" width="100%" controls poster="https://img.icons8.com/ios-filled/100/youtube-play.png">
+  <source src="v4.mp4" type="video/mp4">
+  Browser tidak mendukung video.
+</video>
+<div class="video-overlay" onclick="playVideo()">
+  <div class="play-button">▶</div>
+  <p>Klik untuk memutar video</p>
+</div>
+
+        </div>
+        <div class="video-title">Clip Dump</div>
+      </div>
+    </div>
+    <div class="action-buttons" style="display: none;" id="actionButtons">
+      <button class="btn green" onclick="selanjutnya()">SELANJUTNYA</button>
+      <button class="btn red" onclick="kembali()">KEMBALI</button>
+    </div>
+    <div class="bottom-bar">
+      <div class="bottom-btn"></div>
+      <div class="bottom-btn"></div>
+    </div>
+  </div>
+
+  <script>
+    const total = 4;
+    let current = 0;
+
+    const photos = [
+      "1.jpeg",
+      "2.jpeg",
+      "3.jpeg",
+      "4.jpeg"
+    ];
+
+    function mulaiCetak() {
+      current = 0;
+      const photoList = document.getElementById("photo-list");
+      photoList.innerHTML = '';
+      photoList.style.display = "flex";
+      cetakBerikutnya();
+    }
+
+    function cetakBerikutnya() {
+      if (current < total) {
+        const photoURL = photos[current];
+        const frame = document.createElement("div");
+        frame.className = "photo-frame";
+
+        const img = document.createElement("img");
+        img.src = photoURL;
+
+        const redLine = document.createElement("div");
+        redLine.className = "red-line";
+
+        frame.appendChild(img);
+        frame.appendChild(redLine);
+
+        document.getElementById("photo-list").appendChild(frame);
+
+        current++;
+        const percent = Math.floor((current / total) * 100);
+        document.getElementById("status").textContent = `Mencetak foto ${current} dari ${total}... (${percent}%)`;
+
+        redLine.style.animation = "none";
+        redLine.offsetHeight;
+        redLine.style.animation = "lineAnim 1.5s forwards";
+
+        setTimeout(cetakBerikutnya, 2000);
+      } else {
+        document.getElementById("status").textContent = "Semua foto berhasil dicetak!";
+        document.getElementById("video-section").style.display = "block";
+      }
+      if (current >= total) {
+        document.getElementById("status").textContent = "Semua foto berhasil dicetak!";
+        document.getElementById("video-section").style.display = "block";
+        document.getElementById("actionButtons").style.display = "flex"; // Tampilkan tombol
+      }
+    }
+    function playVideo() {
+      const video = document.getElementById("videoPreview");
+      const overlay = document.querySelector(".video-overlay");
+    
+      video.muted = false;      // Pastikan tidak dimute
+      video.volume = 1.0;       // Volume penuh
+      overlay.style.display = "none"; // Hilangkan overlay
+      video.play();             // Jalankan video
+    }
+    
+    
+    function selanjutnya() {
+      alert("Menuju ke langkah selanjutnya...");
+      // Tambahkan logika sesuai alur aplikasi kamu
+    }
+    
+    function selanjutnya() {
+      // Ganti dengan URL halaman yang ingin dituju setelah menekan 'Selanjutnya'
+      window.location.href = "music.html"; // Ubah dengan URL yang diinginkan
+    }
+  
+    function kembali() {
+      // Untuk kembali ke halaman sebelumnya
+      window.location.href = "message.html";
+      // Atau jika ingin kembali ke halaman tertentu, ganti dengan URL halaman yang diinginkan
+      // window.location.href = "retro.html"; // Ganti dengan halaman yang ingin dituju
+    }
+  </script>
+</body>
+</html>

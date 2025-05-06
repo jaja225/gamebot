@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Happy Birthday Console</title>
+  <style>
+    /* Ensures the page's content is responsive but doesn't scale */
+    body {
+      background-image: url(6.gif);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    /* Fixed size for gameboy container */
+    .gameboy {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      width: 360px;
+      height: 540px;
+      box-shadow: 0 0 20px #333;
+      position: relative;
+    }
+    
+    /* Gameboy screen styles */
+    .screen {
+      background: #0a0;
+      color: #fff;
+      font-size: 2rem; /* Adjust font size using rem */
+      text-align: center;
+      padding: 20px;
+      margin-bottom: 20px;
+      border: 5px solid #222;
+      border-radius: 10px;
+      font-weight: bold;
+    }
+    
+    .green-text {
+      color: #00ff00;
+    }
+    
+    .yellow-text {
+      color: yellow;
+      font-size: 1.2rem;
+    }
+    
+    .buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    /* Button styles */
+    .btn {
+      padding: 15px;
+      border: none;
+      font-weight: bold;
+      border-radius: 8px;
+      box-shadow: 2px 2px 0 #000;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .blue { background: #3498db; color: white; }
+    .red { background: #e74c3c; color: white; }
+    .purple { background: #9b59b6; color: white; }
+    .green { background: #2ecc71; color: white; }
+    
+    /* Gameboy controls layout */
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      margin: 20px 0;
+    }
+    
+    .dpad {
+      width: 100px;
+      height: 100px;
+      display: grid;
+      grid-template-areas:
+        ". up ."
+        "left center right"
+        ". down .";
+      gap: 5px;
+    }
+    
+    .dpad div {
+      background: #2c3e50;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      font-size: 1.2rem; /* Adjust button font size */
+      border-radius: 4px;
+    }
+    
+    .dpad .up { grid-area: up; }
+    .dpad .down { grid-area: down; }
+    .dpad .left { grid-area: left; }
+    .dpad .right { grid-area: right; }
+    .dpad .center { grid-area: center; }
+    
+    .ab-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    
+    .round {
+      width: 40px;
+      height: 40px;
+      background: red;
+      border-radius: 50%;
+      color: white;
+      font-weight: bold;
+      border: none;
+    }
+    
+    .bottom-buttons {
+      display: flex;
+      justify-content: space-evenly;
+    }
+    
+    .small {
+      padding: 5px 15px;
+      border-radius: 8px;
+      border: none;
+      background: #2c3e50;
+      color: white;
+    }
+
+    /* Modal styling */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    
+    .modal.hidden {
+      display: none;
+    }
+    
+    .modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 300px;
+      text-align: center;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 28px;
+      cursor: pointer;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="gameboy">
+    <div class="screen">
+      <p class="green-text">Selamat<br>Datang!</p>
+      <p class="yellow-text">Press Start Button</p>
+    </div>
+
+    <div class="buttons">
+        <a href="message.html" class="btn blue">MESSAGE</a>
+        <a href="gallery.html" class="btn red">GALLERY</a>
+        <a href="music.html" class="btn purple">MUSIC</a>
+        <a href="tetris.html" class="btn green">TETRIS</a>
+    </div>
+
+    <div class="controls">
+      <div class="dpad">
+        <div class="up">&#9650;</div>
+        <div class="left">&#9664;</div>
+        <div class="center"></div>
+        <div class="right">&#9654;</div>
+        <div class="down">&#9660;</div>
+      </div>
+      <div class="ab-buttons">
+        <button class="round">B</button>
+        <button class="round">A</button>
+      </div>
+    </div>
+
+    <div class="bottom-buttons">
+      <button class="small">SELECT</button>
+      <a href="message.html"  class="small">START</a>
+    </div>
+
+    <!-- Modal Structure -->
+    <div id="modal" class="modal hidden">
+      <div class="modal-content">
+        <span id="closeModal" class="close">&times;</span>
+        <p id="modalText"></p>
+      </div>
+    </div>
+
+    <script>
+      document.querySelectorAll('.btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const modal = document.getElementById('modal');
+          const modalText = document.getElementById('modalText');
+  
+          switch (button.textContent) {
+            case 'MESSAGE':
+              modalText.textContent = '🎉 Have a wonderful birthday full of joy and fun!';
+              break;
+            case 'GALLERY':
+              modalText.textContent = '🖼️ Sorry, no gallery yet. But your memories are priceless!';
+              break;
+            case 'MUSIC':
+              modalText.textContent = '🎶 *Plays birthday melody in your heart*';
+              break;
+            case 'TETRIS':
+              modalText.textContent = '🧩 Tetris not available... Just stack the love today!';
+              break;
+          }
+  
+          modal.classList.remove('hidden');
+        });
+      });
+  
+      document.getElementById('closeModal').addEventListener('click', () => {
+        document.getElementById('modal').classList.add('hidden');
+      });
+    </script>
+  </div>
+</body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Retro Music Player</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+    body {
+        background-image: url(6.gif);
+        background-size: cover;
+        background-position: center;
+      font-family: 'Press Start 2P', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .player-container {
+      background: #002200;
+      border: 5px solid yellow;
+      border-radius: 20px;
+      padding: 20px;
+      width: 380px;
+      color: #00ff66;
+      box-shadow: 0 0 20px #000;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .album-art {
+      width: 100%;
+      height: auto;
+      border: 2px solid #00ff66;
+      margin-bottom: 10px;
+    }
+
+    .song-info {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .song-title {
+      color: #00ff66;
+    }
+
+    .song-artist {
+      color: yellow;
+    }
+
+    .progress-container {
+      display: flex;
+      justify-content: space-between;
+      font-size: 10px;
+      margin: 5px 0;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: #444;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .progress {
+      height: 100%;
+      background: #00ff66;
+      width: 0%;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 15px;
+    }
+
+    .controls button {
+      background: #007bff;
+      border: none;
+      padding: 10px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      border-radius: 8px;
+    }
+
+    .playlist {
+      background: #111;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .playlist h3 {
+      color: yellow;
+      margin-bottom: 10px;
+    }
+
+    .playlist ol {
+      list-style: decimal;
+      padding-left: 20px;
+    }
+
+    .playlist li {
+      color: #ddd;
+      margin-bottom: 5px;
+      cursor: pointer;
+    }
+
+    .playlist li.active {
+      color: #00ff66;
+    }
+
+    .bottom-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .bottom-buttons button {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .next {
+      background: #00cc66;
+    }
+
+    .back {
+      background: red;
+    }
+  </style>
+</head>
+<body>
+  <div class="player-container">
+    <div class="title">Music Player</div>
+    <img src="https://upload.wikimedia.org/wikipedia/en/4/47/Boyz_II_Men_-_II.jpg" class="album-art" id="albumArt" alt="Album Art">
+    
+    <div class="song-info">
+      <div class="song-title" id="songTitle">On Bended Knee</div>
+      <div class="song-artist" id="songArtist">Boyz II Men</div>
+    </div>
+
+    <div class="progress-container">
+      <span id="currentTime">0:00</span>
+      <span id="totalDuration">0:00</span>
+    </div>
+    <div class="progress-bar" onclick="seek(event)">
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="controls">
+      <button onclick="prevSong()">⏮️</button>
+      <button onclick="togglePlay()" id="playBtn">▶️</button>
+      <button onclick="nextSong()">⏭️</button>
+    </div>
+
+    <div class="playlist">
+      <h3>PLAYLIST:</h3>
+      <ol id="playlist">
+        <!-- Dynamic playlist will load here -->
+      </ol>
+    </div>
+
+    <div class="bottom-buttons">
+        <button class="next" onclick="window.location.href='tetris.html'">SELANJUTNYA</button>
+        <button class="back" onclick="window.location.href='gallery.html'">KEMBALI</button>
+      </div>
+
+  <audio id="audio"></audio>
+
+  <script>
+    const songs = [
+      {
+        title: "About You",
+        artist: "The 1975",
+        src: "1.mp3",
+        duration: "05:26",
+        cover: "cover1.jpeg"
+      },
+      {
+        title: "Mangu",
+        artist: "Fourtwnty",
+        src: "2.mp3",
+        duration: "04:22",
+        cover: "cover2.jpeg"
+      },
+      {
+        title: "I Need To Know",
+        artist: "Barbie",
+        src: "3.mp3",
+        duration: "04:12",
+        cover: "cover3.jpeg"
+      },
+      {
+        title: "Where You Are",
+        artist: "Moana",
+        src: "4.mp3",
+        duration: "03:29",
+        cover: "cover4.jpeg"
+      }
+    ];
+
+    let currentSong = 0;
+    const audio = document.getElementById('audio');
+    const playBtn = document.getElementById('playBtn');
+    const progress = document.getElementById('progress');
+    const currentTimeDisplay = document.getElementById('currentTime');
+    const totalDurationDisplay = document.getElementById('totalDuration');
+
+    function loadSong(index) {
+      const song = songs[index];
+      audio.src = song.src;
+      document.getElementById('songTitle').textContent = song.title;
+      document.getElementById('songArtist').textContent = song.artist;
+      document.getElementById('albumArt').src = song.cover;
+      updatePlaylistHighlight();
+      audio.load();
+    }
+
+    function togglePlay() {
+      if (audio.paused) {
+        audio.play();
+        playBtn.textContent = "⏸️";
+      } else {
+        audio.pause();
+        playBtn.textContent = "▶️";
+      }
+    }
+
+    function updateProgress() {
+      const percent = (audio.currentTime / audio.duration) * 100;
+      progress.style.width = percent + '%';
+      currentTimeDisplay.textContent = formatTime(audio.currentTime);
+      totalDurationDisplay.textContent = formatTime(audio.duration);
+    }
+
+    function seek(event) {
+      const width = event.currentTarget.offsetWidth;
+      const clickX = event.offsetX;
+      const duration = audio.duration;
+      audio.currentTime = (clickX / width) * duration;
+    }
+
+    function formatTime(time) {
+      const mins = Math.floor(time / 60);
+      const secs = Math.floor(time % 60);
+      return `${mins}:${secs < 10 ? '0' + secs : secs}`;
+    }
+
+    function nextSong() {
+      currentSong = (currentSong + 1) % songs.length;
+      loadSong(currentSong);
+      audio.play();
+      playBtn.textContent = "⏸️";
+    }
+
+    function prevSong() {
+      currentSong = (currentSong - 1 + songs.length) % songs.length;
+      loadSong(currentSong);
+      audio.play();
+      playBtn.textContent = "⏸️";
+    }
+
+    function updatePlaylistHighlight() {
+      const items = document.querySelectorAll('#playlist li');
+      items.forEach((item, i) => {
+        item.classList.toggle('active', i === currentSong);
+      });
+    }
+
+    function renderPlaylist() {
+      const ol = document.getElementById('playlist');
+      songs.forEach((song, index) => {
+        const li = document.createElement('li');
+        li.innerHTML = `${song.title} <span style="float:right">${song.duration}</span>`;
+        li.onclick = () => {
+          currentSong = index;
+          loadSong(currentSong);
+          audio.play();
+          playBtn.textContent = "⏸️";
+        };
+        ol.appendChild(li);
+      });
+      updatePlaylistHighlight();
+    }
+
+    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('ended', nextSong);
+
+    // Initial load
+    renderPlaylist();
+    loadSong(currentSong);
+  </script>
+</body>
+</html>

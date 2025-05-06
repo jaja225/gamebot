@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Initializing</title>
+  <style>
+    body {
+      background-image: url(6.gif);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      color: #00ff99;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      border: 2px solid #00ff99;
+      padding: 5vw;
+      border-radius: 2vw;
+      text-align: center;
+      width: 50vw;
+      background-color: #000;
+    }
+
+    .title {
+      font-size: 5vw;
+      font-weight: bold;
+      color: #00ff99;
+      margin-bottom: 2vw;
+    }
+
+    .init {
+      text-align: left;
+      margin-bottom: 1vw;
+      font-size: 2vw;
+    }
+
+    .progress-container {
+      background-color: #111;
+      border: 1px solid #00ff99;
+      height: 2vw;
+      border-radius: 1vw;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      background-color: #00ff66;
+      height: 100%;
+      width: 0%;
+      transition: width 0.2s;
+    }
+
+    .progress-text {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      color: black;
+      font-size: 1.5vw;
+      top: 4px;
+    }
+
+    .smile {
+      color: #ffc107;
+      font-weight: bold;
+      font-size: 2vw;
+      margin-top: 2vw;
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        width: 70vw;
+        padding: 8vw;
+      }
+
+      .title {
+        font-size: 8vw;
+      }
+
+      .init {
+        font-size: 4vw;
+      }
+
+      .progress-container {
+        height: 3vw;
+      }
+
+      .progress-text {
+        font-size: 2.5vw;
+      }
+
+      .smile {
+        font-size: 5vw;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="title">WELCOME</div>
+    <div class="init">&gt; loading..._</div>
+    <div class="progress-container">
+      <div class="progress-bar" id="progress-bar"></div>
+      <div class="progress-text" id="progress-text">0%</div>
+    </div>
+    <div class="smile" id="smile-text">SMILE!</div>
+  </div>
+
+  <script>
+    let progress = 0;
+    const bar = document.getElementById('progress-bar');
+    const text = document.getElementById('progress-text');
+    const smile = document.getElementById('smile-text');
+
+    const interval = setInterval(() => {
+      if (progress >= 100) {
+        clearInterval(interval);
+        smile.style.display = 'block';
+
+        // Redirect ke halaman selanjutnya setelah 1 detik
+        setTimeout(() => {
+          window.location.href = 'retro.html'; // Ganti dengan URL atau file tujuan
+        }, 1000);
+      } else {
+        progress++;
+        bar.style.width = progress + '%';
+        text.textContent = progress + '%';
+      }
+    }, 50); // Kecepatan loading
+  </script>
+</body>
+</html>

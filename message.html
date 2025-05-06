@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Birthday Message</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-image: url(6.gif);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin: 0;
+      font-family: 'Press Start 2P', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: #00ff99;
+      overflow: hidden;
+    }
+
+    .container {
+      background-color: #111;
+      border: 4px solid #ffeb3b;
+      border-radius: 10px;
+      padding: 20px;
+      width: 400px;
+      text-align: center;
+      box-sizing: border-box;
+    }
+
+    .message-box {
+      background-color: #000;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      color: #00ff99;
+      font-size: 10px;
+      height: 200px;
+      overflow-y: auto;
+      text-align: left;
+      position: relative;
+    }
+
+    .title {
+      font-size: 16px;
+      margin-bottom: 10px;
+      color: #00ff99;
+      text-align: center;
+    }
+
+    button {
+      font-family: 'Press Start 2P', cursive;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 10px;
+      cursor: pointer;
+      margin: 5px;
+    }
+
+    .skip {
+      background-color: #3498db;
+      color: white;
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .next {
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    .back {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    /* Prevent resizing issues */
+    @media (max-width: 600px) {
+      .container {
+        width: 90%;
+        padding: 15px;
+      }
+      .message-box {
+        height: 150px;
+        font-size: 9px;
+      }
+      button {
+        font-size: 8px;
+        padding: 8px 16px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .container {
+        width: 100%;
+      }
+      .message-box {
+        height: 120px;
+        font-size: 8px;
+      }
+      button {
+        font-size: 7px;
+        padding: 6px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="message-box">
+      <div class="title">Message</div>
+      <div id="messageText"></div>
+      <button class="skip" onclick="skipTyping()">SKIP</button>
+    </div>
+    <!-- Navigasi ke halaman lain -->
+    <button class="next" onclick="window.location.href='gallery.html'">SELANJUTNYA</button>
+    <button class="back" onclick="window.location.href='retro.html'">KEMBALI</button>
+  </div>
+
+  <script>
+    const message = `Hi amanda,\n\n\n\nHari ini aku pengen kamu ngerasain semua hal positif dan menyenangkan yang bisa hidup kasih ke kamu.`;
+    let charIndex = 0;
+    let typing = true;
+    const speed = 30;
+    const messageText = document.getElementById("messageText");
+    let typingInterval;
+
+    function typeMessage() {
+      if (!typing) return;
+      if (charIndex < message.length) {
+        messageText.innerHTML += message.charAt(charIndex) === "\n" ? "<br>" : message.charAt(charIndex);
+        charIndex++;
+        typingInterval = setTimeout(typeMessage, speed);
+      }
+    }
+
+    function skipTyping() {
+      clearTimeout(typingInterval);
+      typing = false;
+      messageText.innerHTML = message.replace(/\n/g, "<br>");
+    }
+
+    window.onload = typeMessage;
+  </script>
+</body>
+</html>
